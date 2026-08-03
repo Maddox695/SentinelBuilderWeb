@@ -2,6 +2,7 @@ import './style.css'
 import { renderHome } from './ui.js'
 import { showNewProject } from './builder.js'
 import { game } from './game.js'
+import { staff } from './staff.js'
 
 
 document.querySelector('#app').innerHTML = renderHome()
@@ -9,98 +10,9 @@ document.querySelector('#app').innerHTML = renderHome()
 const output = document.getElementById('output')
 
 
-// NEW PROJECT
-
-document.getElementById('new').onclick = () => {
-
-output.innerHTML = showNewProject()
-
-
-document.getElementById('createProject').onclick = () => {
-
-
-const name = projectName.value
-const description = projectDescription.value
-const type = projectType.value
-
-
-if(!name){
-
-alert("Enter project name")
-return
-
-}
-
-
-let projects =
-JSON.parse(localStorage.getItem("sentinelProjects")) || []
-
-
-projects.push({
-name,
-description,
-type,
-date:new Date().toLocaleString()
-})
-
-
-localStorage.setItem(
-"sentinelProjects",
-JSON.stringify(projects)
-)
-
-
-output.innerHTML = `
-<h2>✅ Project Created</h2>
-<p>${name}</p>
-<p>💾 Saved</p>
-`
-
-}
-
-}
-
-
-
-// LOAD PROJECT
-
-document.getElementById('open').onclick = () => {
-
-
-let projects =
-JSON.parse(localStorage.getItem("sentinelProjects")) || []
-
-
-output.innerHTML = `
-
-<h2>📂 Saved Projects</h2>
-
-${projects.map(p=>`
-
-<div class="card">
-
-<h3>${p.name}</h3>
-
-<p>${p.type}</p>
-
-<p>${p.description}</p>
-
-</div>
-
-`).join("")}
-
-`
-
-}
-
-
-
-
 // SENTINEL DASHBOARD
 
-
 function showEmpire(){
-
 
 const companyValue =
 (game.money +
@@ -113,93 +25,68 @@ output.innerHTML = `
 
 <h2>🛡️ Sentinel Security Empire</h2>
 
-
 <div class="card">
 
-<p>🏢 Company:
-${game.companyName}</p>
+<p>🏢 Company: ${game.companyName}</p>
 
-<p>💰 Cash:
-R${game.money}</p>
+<p>💰 Cash: R${game.money}</p>
 
-<p>📊 Company Value:
-R${companyValue}</p>
+<p>📊 Company Value: R${companyValue}</p>
 
-<p>⭐ Reputation:
-${game.reputation}</p>
+<p>⭐ Reputation: ${game.reputation}</p>
 
-<p>📈 Level:
-${game.level}</p>
+<p>📈 Level: ${game.level}</p>
 
-<p>👮 Guards:
-${game.guards}</p>
+<p>👮 Guards: ${game.guards}</p>
 
-<p>🐕 K9 Units:
-${game.k9Units}</p>
+<p>🐕 K9 Units: ${game.k9Units}</p>
 
-<p>🚓 Vehicles:
-${game.vehicles}</p>
+<p>🚓 Vehicles: ${game.vehicles}</p>
 
-<p>📄 Contracts:
-${game.contracts}</p>
+<p>📄 Contracts: ${game.contracts}</p>
 
 </div>
 
 
+<button id="staffBtn">
+👮 Staff Management
+</button>
+
+
 <button id="hire">
-👮 Hire Guard R5000
-</button>
-
-
-<button id="k9">
-🐕 Train K9 R10000
-</button>
-
-
-<button id="vehicle">
-🚓 Buy Vehicle R25000
+Hire Guard R5000
 </button>
 
 
 <button id="contract">
-📄 Complete Contract
+Complete Contract
 </button>
 
 
-<div id="message"></div>
-
+<div id="result"></div>
 
 `
 
 
+document.getElementById('staffBtn')
+.onclick = showStaff
 
-document.getElementById('hire').onclick=()=>{
+
+document.getElementById('hire')
+.onclick = ()=>{
 
 game.hireGuard()
+
 showEmpire()
 
 }
 
 
-document.getElementById('k9').onclick=()=>{
-
-game.trainK9()
-showEmpire()
-
-}
-
-
-document.getElementById('vehicle').onclick=()=>{
-
-game.buyVehicle()
-showEmpire()
-
-}
-
-
-document.getElementById('contract').onclick=()=>{
+document.getElementById('contract')
+.onclick = ()=>{
 
 game.createContract()
+
 showEmpire()
 
 }
@@ -209,58 +96,133 @@ showEmpire()
 
 
 
-document.getElementById('empire').onclick =
-showEmpire
+// STAFF SYSTEM
 
+function showStaff(){
+
+output.innerHTML = `
+
+<h2>👮 Staff Management</h2>
+
+
+<button id="newGuard">
+Hire New Employee
+</button>
+
+
+<div>
+
+${staff.guards.map((g,index)=>`
+
+<div class="card">
+
+<h3>${g.name}</h3>
+
+<p>Rank: ${g.rank}</p>
+
+<p>Skill: ${g.skill}%</p>
+
+<p>Salary: R${g.salary}</p>
+
+
+<button onclick="trainGuard(${index})">
+Train
+</button>
+
+
+</div>
+
+
+`).join("")}
+
+
+</div>
+
+<div id="staffMessage"></div>
+
+`
+
+
+document.getElementById('newGuard')
+.onclick=()=>{
+
+
+let name =
+prompt("Enter guard name")
+
+
+if(name){
+
+staff.hire(name)
+
+showStaff()
+
+}
+
+}
+
+
+window.trainGuard=(index)=>{
+
+staff.train(index)
+
+showStaff()
+
+}
+
+
+}
+
+
+
+
+// LOAD EMPIRE BUTTON
+
+document.getElementById('empire')
+.onclick = showEmpire
+
+
+
+// NEW PROJECT
+
+document.getElementById('new')
+.onclick = ()=>{
+
+output.innerHTML = showNewProject()
+
+}
+
+
+
+// LOAD PROJECT
+
+document.getElementById('open')
+.onclick = ()=>{
+
+output.innerHTML = `
+
+<h2>📂 Load Project</h2>
+
+<p>Project loading system active.</p>
+
+`
+
+}
 
 
 
 // AI BUILDER
 
-document.getElementById('generate').onclick = ()=>{
-
+document.getElementById('generate')
+.onclick = ()=>{
 
 output.innerHTML=`
 
 <h2>🤖 AI Builder</h2>
 
-<textarea id="aiPrompt"
-placeholder="Describe your idea..."
-style="width:100%;height:120px;">
-</textarea>
-
-
-<br><br>
-
-
-<button id="build">
-Generate Blueprint
-</button>
-
-
-<div id="aiOutput"></div>
+<p>Blueprint generator active.</p>
 
 `
-
-
-document.getElementById('build').onclick=()=>{
-
-aiOutput.innerHTML=`
-
-<h3>Generated Blueprint</h3>
-
-<p>${aiPrompt.value}</p>
-
-<ul>
-<li>Database</li>
-<li>Systems</li>
-<li>Interface</li>
-<li>Progression</li>
-</ul>
-
-`
-
-}
 
 }
 
@@ -268,13 +230,14 @@ aiOutput.innerHTML=`
 
 // SETTINGS
 
-document.getElementById('settings').onclick=()=>{
+document.getElementById('settings')
+.onclick = ()=>{
 
 output.innerHTML=`
 
 <h2>⚙️ Settings</h2>
 
-<p>Sentinel Builder v1.1</p>
+<p>Sentinel Builder v1.2</p>
 
 `
 
