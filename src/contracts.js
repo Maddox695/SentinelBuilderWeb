@@ -1,3 +1,6 @@
+import { game } from './game.js'
+
+
 export const contracts = {
 
 active: [],
@@ -14,6 +17,7 @@ payment:10000,
 reputation:5
 },
 
+
 {
 client:"Warehouse Company",
 type:"Asset Protection",
@@ -22,6 +26,7 @@ guards:5,
 payment:25000,
 reputation:10
 },
+
 
 {
 client:"VIP Executive",
@@ -35,20 +40,48 @@ reputation:20
 ],
 
 
+
 accept(index){
+
 
 const contract = this.available[index]
 
-if(contract){
 
-this.active.push(contract)
-
-return "Contract accepted."
-
-}
+if(!contract){
 
 return "Invalid contract."
 
 }
+
+
+
+if(game.guards < contract.guards){
+
+return "❌ Not enough guards for this contract."
+
+}
+
+
+
+game.money += contract.payment
+
+game.reputation += contract.reputation
+
+game.level = Math.floor(game.reputation / 10)
+
+
+this.active.push(contract)
+
+this.available.splice(index,1)
+
+
+game.save()
+
+
+return `✅ Contract completed. Earned R${contract.payment}`
+
+
+}
+
 
 }
