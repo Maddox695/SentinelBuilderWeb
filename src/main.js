@@ -10,28 +10,23 @@ const output = document.getElementById('output')
 
 
 // NEW PROJECT
-document.getElementById('new').addEventListener('click', () => {
+
+document.getElementById('new').onclick = () => {
 
 output.innerHTML = showNewProject()
 
 
-document.getElementById('createProject')
-.addEventListener('click',()=>{
+document.getElementById('createProject').onclick = () => {
 
 
-const name =
-document.getElementById('projectName').value
-
-const description =
-document.getElementById('projectDescription').value
-
-const type =
-document.getElementById('projectType').value
+const name = projectName.value
+const description = projectDescription.value
+const type = projectType.value
 
 
 if(!name){
 
-alert("Please enter a project name.")
+alert("Enter project name")
 return
 
 }
@@ -42,12 +37,10 @@ JSON.parse(localStorage.getItem("sentinelProjects")) || []
 
 
 projects.push({
-
 name,
 description,
 type,
 date:new Date().toLocaleString()
-
 })
 
 
@@ -58,26 +51,20 @@ JSON.stringify(projects)
 
 
 output.innerHTML = `
-
 <h2>✅ Project Created</h2>
-
 <p>${name}</p>
-
-<p>💾 Saved successfully.</p>
-
+<p>💾 Saved</p>
 `
 
-})
+}
 
-
-})
+}
 
 
 
 // LOAD PROJECT
 
-document.getElementById('open')
-.addEventListener('click',()=>{
+document.getElementById('open').onclick = () => {
 
 
 let projects =
@@ -90,12 +77,7 @@ output.innerHTML = `
 
 ${projects.map(p=>`
 
-<div style="
-padding:10px;
-border:1px solid #666;
-margin:10px;
-border-radius:8px;
-">
+<div class="card">
 
 <h3>${p.name}</h3>
 
@@ -109,16 +91,22 @@ border-radius:8px;
 
 `
 
-
-})
-
+}
 
 
 
-// SENTINEL EMPIRE DASHBOARD
 
-document.getElementById('empire')
-.addEventListener('click',()=>{
+// SENTINEL DASHBOARD
+
+
+function showEmpire(){
+
+
+const companyValue =
+(game.money +
+(game.guards * 5000) +
+(game.k9Units * 10000) +
+(game.vehicles * 25000))
 
 
 output.innerHTML = `
@@ -126,94 +114,110 @@ output.innerHTML = `
 <h2>🛡️ Sentinel Security Empire</h2>
 
 
-<p>🏢 Company: ${game.companyName}</p>
+<div class="card">
 
-<p>💰 Money: R${game.money}</p>
+<p>🏢 Company:
+${game.companyName}</p>
 
-<p>⭐ Reputation: ${game.reputation}</p>
+<p>💰 Cash:
+R${game.money}</p>
 
-<p>📈 Level: ${game.level}</p>
+<p>📊 Company Value:
+R${companyValue}</p>
 
-<p>👮 Guards: ${game.guards}</p>
+<p>⭐ Reputation:
+${game.reputation}</p>
 
-<p>🐕 K9 Units: ${game.k9Units}</p>
+<p>📈 Level:
+${game.level}</p>
 
-<p>🚓 Vehicles: ${game.vehicles}</p>
+<p>👮 Guards:
+${game.guards}</p>
 
-<p>📄 Contracts: ${game.contracts}</p>
+<p>🐕 K9 Units:
+${game.k9Units}</p>
+
+<p>🚓 Vehicles:
+${game.vehicles}</p>
+
+<p>📄 Contracts:
+${game.contracts}</p>
+
+</div>
 
 
 <button id="hire">
-Hire Guard (R5000)
+👮 Hire Guard R5000
 </button>
 
 
 <button id="k9">
-Train K9 (R10000)
+🐕 Train K9 R10000
 </button>
 
 
 <button id="vehicle">
-Buy Vehicle (R25000)
+🚓 Buy Vehicle R25000
 </button>
 
 
 <button id="contract">
-Complete Contract
+📄 Complete Contract
 </button>
 
 
-<div id="result"></div>
+<div id="message"></div>
+
 
 `
 
 
 
-document.getElementById('hire')
-.onclick=()=>{
+document.getElementById('hire').onclick=()=>{
 
-document.getElementById('result').innerHTML =
 game.hireGuard()
+showEmpire()
 
 }
 
 
-document.getElementById('k9')
-.onclick=()=>{
+document.getElementById('k9').onclick=()=>{
 
-document.getElementById('result').innerHTML =
 game.trainK9()
+showEmpire()
 
 }
 
 
-document.getElementById('vehicle')
-.onclick=()=>{
+document.getElementById('vehicle').onclick=()=>{
 
-document.getElementById('result').innerHTML =
 game.buyVehicle()
+showEmpire()
 
 }
 
 
-document.getElementById('contract')
-.onclick=()=>{
+document.getElementById('contract').onclick=()=>{
 
-document.getElementById('result').innerHTML =
 game.createContract()
+showEmpire()
 
 }
 
 
-})
+}
+
+
+
+document.getElementById('empire').onclick =
+showEmpire
 
 
 
 
 // AI BUILDER
 
-document.getElementById('generate')
-.onclick=()=>{
+document.getElementById('generate').onclick = ()=>{
 
 
 output.innerHTML=`
@@ -221,52 +225,42 @@ output.innerHTML=`
 <h2>🤖 AI Builder</h2>
 
 <textarea id="aiPrompt"
-placeholder="Describe your app idea..."
+placeholder="Describe your idea..."
 style="width:100%;height:120px;">
 </textarea>
 
+
 <br><br>
+
 
 <button id="build">
 Generate Blueprint
 </button>
+
 
 <div id="aiOutput"></div>
 
 `
 
 
-document.getElementById('build')
-.onclick=()=>{
+document.getElementById('build').onclick=()=>{
 
-
-let idea =
-document.getElementById('aiPrompt').value
-
-
-document.getElementById('aiOutput')
-.innerHTML=`
+aiOutput.innerHTML=`
 
 <h3>Generated Blueprint</h3>
 
-<p>${idea}</p>
-
+<p>${aiPrompt.value}</p>
 
 <ul>
-
-<li>User Interface</li>
 <li>Database</li>
-<li>Money System</li>
-<li>Inventory</li>
+<li>Systems</li>
+<li>Interface</li>
 <li>Progression</li>
-<li>Save System</li>
-
 </ul>
 
 `
 
 }
-
 
 }
 
@@ -274,14 +268,13 @@ document.getElementById('aiOutput')
 
 // SETTINGS
 
-document.getElementById('settings')
-.onclick=()=>{
+document.getElementById('settings').onclick=()=>{
 
 output.innerHTML=`
 
 <h2>⚙️ Settings</h2>
 
-<p>Sentinel Builder v1.0</p>
+<p>Sentinel Builder v1.1</p>
 
 `
 
