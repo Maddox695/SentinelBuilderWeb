@@ -1,80 +1,109 @@
-export const game = {
-
-    companyName: "Sentinel Security",
-
-    money: 50000,
-
-    reputation: 10,
-
-    level: 1,
-
-    guards: 5,
-
-    k9Units: 1,
-
-    vehicles: 1,
-
-    contracts: 0,
+const savedGame = JSON.parse(
+localStorage.getItem("sentinelGame")
+)
 
 
-    hireGuard() {
+export const game = savedGame || {
 
-        if(this.money >= 5000){
+companyName:"Sentinel Security",
 
-            this.money -= 5000
-            this.guards++
+money:50000,
 
-            return "Guard hired successfully."
+reputation:10,
 
-        }
+level:1,
 
-        return "Not enough money."
+guards:5,
 
-    },
+k9Units:1,
 
+vehicles:1,
 
-    buyVehicle(){
-
-        if(this.money >= 25000){
-
-            this.money -= 25000
-            this.vehicles++
-
-            return "Vehicle purchased."
-
-        }
-
-        return "Not enough money."
-
-    },
+contracts:0,
 
 
-    trainK9(){
+save(){
 
-        if(this.money >= 10000){
+localStorage.setItem(
+"sentinelGame",
+JSON.stringify(this)
+)
 
-            this.money -= 10000
-            this.k9Units++
-
-            return "K9 unit trained."
-
-        }
-
-        return "Not enough money."
-
-    },
+},
 
 
-    createContract(){
+hireGuard(){
 
-        this.contracts++
+if(this.money >= 5000){
 
-        this.money += 15000
+this.money -= 5000
 
-        this.reputation += 5
+this.guards++
 
-        return "Security contract completed."
+this.save()
 
-    }
+return "👮 Guard hired."
+
+}
+
+return "❌ Not enough money."
+
+},
+
+
+trainK9(){
+
+if(this.money >= 10000){
+
+this.money -= 10000
+
+this.k9Units++
+
+this.save()
+
+return "🐕 K9 unit trained."
+
+}
+
+return "❌ Not enough money."
+
+},
+
+
+buyVehicle(){
+
+if(this.money >= 25000){
+
+this.money -= 25000
+
+this.vehicles++
+
+this.save()
+
+return "🚓 Vehicle purchased."
+
+}
+
+return "❌ Not enough money."
+
+},
+
+
+createContract(){
+
+this.contracts++
+
+this.money += 15000
+
+this.reputation += 5
+
+this.level = Math.floor(this.reputation / 10)
+
+this.save()
+
+return "📄 Contract completed."
+
+}
+
 
 }
